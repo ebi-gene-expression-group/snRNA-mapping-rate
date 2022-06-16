@@ -319,7 +319,6 @@ process alevin_to_mtx {
 
     conda "${baseDir}/envs/parse_alevin_fry.yml"
 
-    // conda "/nfs/production/irene/ma/users/nnolte/conda/envs/parse_alevin_fry"
     
     memory { 10.GB * task.attempt }
     errorStrategy { task.exitStatus == 130 || task.exitStatus == 137 ? 'retry' : 'finish' }
@@ -561,7 +560,6 @@ process cell_metadata_raw {
 
     conda "${baseDir}/envs/parse_alevin_fry.yml"
 
-    // conda "/nfs/production/irene/ma/users/nnolte/conda/envs/parse_alevin_fry"
     
     memory { 10.GB * task.attempt }
     errorStrategy { task.exitStatus == 130 || task.exitStatus == 137 ? 'retry' : 'finish' }
@@ -586,7 +584,7 @@ process cell_metadata {
 
     conda "${baseDir}/envs/parse_alevin_fry.yml"
 
-    // conda "/nfs/production/irene/ma/users/nnolte/conda/envs/parse_alevin_fry"
+    
     
     memory { 10.GB * task.attempt }
     errorStrategy { task.exitStatus == 130 || task.exitStatus == 137 ? 'retry' : 'finish' }

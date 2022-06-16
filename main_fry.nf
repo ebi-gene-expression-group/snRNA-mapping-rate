@@ -296,7 +296,7 @@ ALEVIN_FRY_RESULTS_SPLICI
 
 process mtx_alevin_fry_to_mtx {
     // publishDir "${resultsRoot}/${params.name}/", mode: 'copy', overwrite: true
-    // conda "/nfs/production/irene/ma/users/nnolte/conda/envs/parse_alevin_fry"
+    
 
     conda "${baseDir}/envs/parse_alevin_fry.yml"
 
@@ -539,7 +539,7 @@ process cell_metadata_raw {
 
     conda "${baseDir}/envs/parse_alevin_fry.yml"
 
-    // conda "/nfs/production/irene/ma/users/nnolte/conda/envs/parse_alevin_fry"
+    
     
     memory { 10.GB * task.attempt }
     errorStrategy { task.exitStatus == 130 || task.exitStatus == 137 ? 'retry' : 'finish' }
@@ -564,7 +564,7 @@ process cell_metadata {
 
     conda "${baseDir}/envs/parse_alevin_fry.yml"
 
-    // conda "/nfs/production/irene/ma/users/nnolte/conda/envs/parse_alevin_fry"
+   
     
     memory { 10.GB * task.attempt }
     errorStrategy { task.exitStatus == 130 || task.exitStatus == 137 ? 'retry' : 'finish' }
