@@ -280,7 +280,7 @@ process alevin_config {
     
     cache 'lenient'
 
-    memory { 20.GB * task.attempt }
+    memory { 5.GB * task.attempt }
     cpus 12
 
     errorStrategy { task.exitStatus !=2 && (task.exitStatus == 130 || task.exitStatus == 137 || task.attempt < 3)  ? 'retry' : 'ignore' }
