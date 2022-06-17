@@ -275,7 +275,7 @@ process alevin_config {
         alevin-fry generate-permit-list --input ${runId}_ALEVIN_fry_map -d fw --unfiltered-pl '${baseDir}/whitelist/737K-august-2016.txt'  --output-dir ${runId}_ALEVIN_fry_quant --min-reads 10
     elif [ "${params.protocol}" = "10XV3" ]
     then
-        alevin-fry generate-permit-list --input ${runId}_ALEVIN_fry_map -d both --unfiltered-pl /nfs/production/irene/ma/users/nnolte/whitelist/13M-february-2018_onecollum.txt    --output-dir ${runId}_ALEVIN_fry_quant --min-reads 0
+        alevin-fry generate-permit-list --input ${runId}_ALEVIN_fry_map -d both --unfiltered-pl /nfs/production/irene/ma/users/nnolte/whitelist/13M-february-2018_onecollum.txt    --output-dir ${runId}_ALEVIN_fry_quant --min-reads 10
     else
         alevin-fry generate-permit-list --input ${runId}_ALEVIN_fry_map -d fw --output-dir ${runId}_ALEVIN_fry_quant  --force-cells 50000
     fi
@@ -396,6 +396,33 @@ process merge_protocol_count_matrices {
         rm -f dirs.txt
         
     """
+}
+
+RAW_COUNT_MATRICES.into{
+    RAW_COUNT_MATRICES_FOR_QC, 
+    RAW_COUNT_MATRICES_FOR_OUTPUT
+}
+
+process droplet_qc_plot{
+    
+    conda "${baseDir}/envs/droplet-barcode.yml"
+
+    publishDir "$resultsRoot/qc_plot/", mode: 'copy', overwrite: true
+    
+    memory { 10.GB * task.attempt }
+    errorStrategy { task.exitStatus == 130 || task.exitStatus == 137 ? 'retry' : 'finish' }
+    maxRetries 20
+
+    input:
+        path("${params.name}_counts_mtx_raw") from RAW_COUNT_MATRICES_FOR_QC
+
+    output:
+        file("barcode_rank.png") into ALEVIN_QC_PLOTS
+
+    
+    """
+    dropletBarcodePlot.R --mtx-matrix ${params.name}_counts_mtx_raw/matrix.mtx --output-plot barcode_rank.png
+    """ 
 }
 
 process remove_empty_drops {
@@ -548,7 +575,7 @@ process cell_metadata_raw {
     publishDir "$resultsRoot/${params.name}/raw", mode: 'copy', overwrite: true
 
     input:
-    path("${params.name}_counts_mtx_raw") from RAW_COUNT_MATRICES
+    path("${params.name}_counts_mtx_raw") from RAW_COUNT_MATRICES_FOR_OUTPUT
     
     output:
     set path("${params.name}_counts_mtx_raw"), path("${params.name}.cell_metadata_raw.tsv") into FINAL_OUTPUT_RAW
