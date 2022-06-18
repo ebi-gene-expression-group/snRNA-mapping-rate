@@ -398,7 +398,8 @@ process merge_protocol_count_matrices {
     """
 }
 
-RAW_COUNT_MATRICES.into{
+RAW_COUNT_MATRICES
+.into{
     RAW_COUNT_MATRICES_FOR_QC, 
     RAW_COUNT_MATRICES_FOR_OUTPUT
 }
