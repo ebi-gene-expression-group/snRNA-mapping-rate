@@ -451,7 +451,7 @@ process rds_to_mtx{
         set val(runId), file(rds) from NONEMPTY_RDS
 
     output:
-        set val(runId), file("counts_mtx_nonempty") into NONEMPTY_MTX
+        set val(runId), file("counts_mtx_nonempty_${runId}") into NONEMPTY_MTX
 
     """ 
         #!/usr/bin/env Rscript
@@ -486,7 +486,7 @@ process merge_protocol_count_matrices_nonempty {
         path("${params.name}_counts_mtx_nonempty/barcodes.tsv") into EXP_COUNT_BARCODES
 
     """
-        find \$(pwd) -name 'counts_mtx_nonempty*' > dirs.txt
+        find \$(pwd) -name 'counts_mtx_nonempty_*' > dirs.txt
         
         ndirs=\$(cat dirs.txt | wc -l)
         if [ "\$ndirs" -gt 1 ]; then 
