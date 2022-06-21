@@ -664,6 +664,7 @@ process index_kb_MR2 {
     kb ref -i kb_index_preRNA -g t2g_kb_preRNA.txt -f1 cDNA_preRNA.fa ${referenceGenome} preRNA_referenceGtf.gtf
     """     
 }
+
 // run kb count for preRNA 
 process kb_count_MR2 {
     cache 'lenient'
@@ -738,20 +739,20 @@ process index_alevin_fry_MR3 {
 
     """
     salmon alevin ${barcodeConfig} --sketch -1 \$(ls barcodes*.fastq.gz | tr '\\n' ' ') -2 \$(ls cdna*.fastq.gz | tr '\\n' ' ') \
-        -i alevin_index_for_fry -p ${task.cpus} -o ${runId}_ALEVIN_fry_map 
+        -i alevin_index_splici -p ${task.cpus} -o ${runId}_ALEVIN_fry_map 
 
-    if (${barcodeConfig} == "--chromium")
+    if [ "${params.protocol}" = "10XV2" ]
     then
-        alevin-fry generate-permit-list --unfiltered-pl '${baseDir}/whitelist/737K-august-2016.txt' --input ${runId}_ALEVIN_fry_map -d fw --output-dir ${runId}_ALEVIN_fry_quant -k --min-reads 1
-    elif (${barcodeConfig} == "--chromiumV3")
+        alevin-fry generate-permit-list --input ${runId}_ALEVIN_fry_map -d fw --unfiltered-pl /nfs/production/irene/ma/users/nnolte/whitelist/737K-august-2016.txt --output-dir ${runId}_ALEVIN_fry_quant --min-reads 10
+    elif [ "${params.protocol}" = "10XV3" ]
     then
-        alevin-fry generate-permit-list --unfiltered-pl '${baseDir}/whitelist/3M-february-2018.txt.gz' t --input ${runId}_ALEVIN_fry_map -d fw --output-dir ${runId}_ALEVIN_fry_quant -k --min-reads 1
+        alevin-fry generate-permit-list --input ${runId}_ALEVIN_fry_map -d fw --unfiltered-pl /nfs/production/irene/ma/users/nnolte/whitelist/3M-february-2018_onecollum.txt --output-dir ${runId}_ALEVIN_fry_quant --min-reads 10
     else
-        alevin-fry generate-permit-list --input ${runId}_ALEVIN_fry_map -d fw --output-dir ${runId}_ALEVIN_fry_quant -k --min-reads 1
+        alevin-fry generate-permit-list --input ${runId}_ALEVIN_fry_map -d fw --output-dir ${runId}_ALEVIN_fry_quant  --force-cells 50000
     fi
 
     alevin-fry collate -i ${runId}_ALEVIN_fry_quant -r ${runId}_ALEVIN_fry_map -t 16
-    alevin-fry quant -i ${runId}_ALEVIN_fry_quant -m t2g_cDNA.txt -t 16 -r cr-like -o ${runId}_ALEVIN_fry_quant --use-mtx
+    alevin-fry quant -i ${runId}_ALEVIN_fry_quant -m t2g_cDNA.txt -t 16 -r cr-like-em -o ${runId}_ALEVIN_fry_quant --use-mtx
 
     TOTAL=\$(grep "num_processed" ${runId}_ALEVIN_fry_map/aux_info/meta_info.json |  awk '{split(\$0, array, ": "); print array[2]}'| sed 's/,//g')
 
@@ -759,9 +760,6 @@ process index_alevin_fry_MR3 {
 
     FRY_MAPPING=\$(echo "scale=2;((\$MAPPED * 100) / \$TOTAL)"|bc)
 
-    
-    
-    
     """
 }
 
