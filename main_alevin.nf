@@ -293,6 +293,7 @@ process alevin_config {
 
     output:
         set val(runId), file("${runId}"),  file("${runId}/alevin/raw_cb_frequency.txt") into ALEVIN_RESULTS
+        set val(runId), stdout into ALEVIN_MAPPING
 
     """
     salmon alevin ${barcodeConfig} -1 \$(ls barcodes*.fastq.gz | tr '\\n' ' ') -2 \$(ls cdna*.fastq.gz | tr '\\n' ' ') \
@@ -303,8 +304,26 @@ process alevin_config {
         echo "Minimum mapping rate (\$min_mapping) is less than the specified threshold of ${params.minMappingRate}" 1>&2
         exit 1 
     fi
- 
+    mapping_rate=\$(grep "mapping_rate" ${runId}_tmp/aux_info/alevin_meta_info.json |\
+     sed 's/,//g' | awk -F': ' '{print \$2}' | sort -n | head -n 1 | cut -c 1-4)
+    echo -n "\$mapping_rate"
     mv ${runId}_tmp ${runId}
+    """
+}
+
+
+process write_mapping_rate {
+    publishDir "$resultsRoot/mapping_rates/alevin", mode: 'copy', overwrite: true
+   
+    input:
+    set val(runId), mr1 from ALEVIN_MAPPING
+    
+    output:
+    file("*_${runId}.txt") into RESULTS_FOR_COUNTING
+    
+    """
+    echo "${mr1}" > ${params.name}_${runId}.txt
+         
     """
 }
 

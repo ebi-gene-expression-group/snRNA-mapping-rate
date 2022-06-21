@@ -264,6 +264,7 @@ process alevin_config {
        
     output:
         set val(runId), path("${runId}_ALEVIN_fry_quant"), path("${runId}_ALEVIN_fry_quant/featureDump.txt") into ALEVIN_FRY_RESULTS_SPLICI
+        set val(runId), env(FRY_MAPPING) into ALEVIN_FRY_MAPPING
       
 
     """
@@ -283,7 +284,26 @@ process alevin_config {
     alevin-fry collate -i ${runId}_ALEVIN_fry_quant -r ${runId}_ALEVIN_fry_map -t 16
     alevin-fry quant -i ${runId}_ALEVIN_fry_quant -m t2g_cDNA.txt -t 16 -r cr-like-em -o ${runId}_ALEVIN_fry_quant --use-mtx
 
+    TOTAL=\$(grep "num_processed" ${runId}_ALEVIN_fry_map/aux_info/meta_info.json |  awk '{split(\$0, array, ": "); print array[2]}'| sed 's/,//g')
+    MAPPED=\$(grep "num_mapped" ${runId}_ALEVIN_fry_map/aux_info/meta_info.json |  awk '{split(\$0, array, ": "); print array[2]}'| sed 's/,//g')
+    FRY_MAPPING=\$(echo "scale=2;((\$MAPPED * 100) / \$TOTAL)"|bc)
+
         
+    """
+}
+
+process write_mapping_rate {
+    publishDir "$resultsRoot/mapping_rates/fry", mode: 'copy', overwrite: true
+   
+    input:
+    set val(runId), mr1 from ALEVIN_FRY_MAPPING
+    
+    output:
+    file("*_${runId}.txt") into RESULTS_FOR_COUNTING
+    
+    """
+    echo "${mr1}" > ${params.name}_${runId}.txt
+         
     """
 }
 
