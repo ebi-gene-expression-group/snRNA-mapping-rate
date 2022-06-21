@@ -586,7 +586,7 @@ process cell_metadata {
 
     
     
-    memory { 10.GB * task.attempt }
+    memory { 1.GB * task.attempt }
     errorStrategy { task.exitStatus == 130 || task.exitStatus == 137 ? 'retry' : 'finish' }
     maxRetries 20
 
