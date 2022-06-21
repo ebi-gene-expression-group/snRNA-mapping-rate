@@ -25,11 +25,13 @@ parser = argparse.ArgumentParser(description='Convert Alevin outputs to 10X .mtx
 parser.add_argument('alevin_fry_quant', help = 'Alevin output directory')
 parser.add_argument('mtx_out', help = 'Output directory for converted results')
 parser.add_argument('--cell_prefix', dest='cell_prefix', default='', help = 'Prefix to apply to cell barcodes')
+parser.add_argument('mode', default='scRNA', help='scRNA or snRNA')
 args = parser.parse_args() 
 
 alevin_out=args.alevin_fry_quant
 mtx_out=args.mtx_out
 cell_prefix=args.cell_prefix
+mode=args.mode
 
 # Run some checks in the Alevin output
 
@@ -38,7 +40,7 @@ if not os.path.isdir(alevin_out):
     sys.exit(1)
 
 # Read mtx from alevin_fry_quant 
-ad = pyroe.load_fry(alevin_out, output_format='scRNA')
+ad = pyroe.load_fry(alevin_out, output_format=mode)
 
 #pd.DataFrame(ad.var.index).to_csv(os.path.join(destination, "genes.tsv" ),   sep = "\t", index_col = False)
 #pd.DataFrame(ad.obs.index).to_csv(os.path.join(destination, "barcodes.tsv"), sep = "\t", index_col = False)
