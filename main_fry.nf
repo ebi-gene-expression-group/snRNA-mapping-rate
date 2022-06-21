@@ -10,6 +10,7 @@ species = params.species
 transcriptToGene = params.transcriptToGene
 transcriptomeIndex = params.transcriptomeIndex
 protocol = params.protocol
+mode = params.mode
 
 manualDownloadFolder =''
 if ( params.containsKey('manualDownloadFolder')){
@@ -333,7 +334,7 @@ process mtx_alevin_fry_to_mtx {
 
 
     """
-    alevinFryMtxTo10x.py --cell_prefix ${runId}- ${runId}_ALEVIN_fry_quant counts_mtx_${runId}
+    alevinFryMtxTo10x.py --cell_prefix ${runId}- ${runId}_ALEVIN_fry_quant counts_mtx_${runId} ${params.mode}
     """      
 }
 
