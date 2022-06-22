@@ -293,7 +293,7 @@ process alevin_config {
 
     output:
         set val(runId), file("${runId}"),  file("${runId}/alevin/raw_cb_frequency.txt") into ALEVIN_RESULTS
-        set val(runId), stdout into ALEVIN_MAPPING
+        set val(runId), env(ALEVIN_MAPPING) into ALEVIN_MAPPING
 
     """
     salmon alevin ${barcodeConfig} -1 \$(ls barcodes*.fastq.gz | tr '\\n' ' ') -2 \$(ls cdna*.fastq.gz | tr '\\n' ' ') \
@@ -306,7 +306,9 @@ process alevin_config {
     fi
     mapping_rate=\$(grep "mapping_rate" ${runId}_tmp/aux_info/alevin_meta_info.json |\
      sed 's/,//g' | awk -F': ' '{print \$2}' | sort -n | head -n 1 | cut -c 1-4)
-    echo -n "\$mapping_rate"
+    
+    ALEVIN_MAPPING=\$(echo -n "\$mapping_rate")
+
     mv ${runId}_tmp ${runId}
     """
 }
