@@ -278,8 +278,11 @@ process alevin_config {
     elif [ "${params.protocol}" = "10XV3" ]
     then
         alevin-fry generate-permit-list --input ${runId}_ALEVIN_fry_map -d fw --unfiltered-pl /nfs/production/irene/ma/users/nnolte/whitelist/3M-february-2018_onecollum.txt --output-dir ${runId}_ALEVIN_fry_quant --min-reads 10
+    elif [ "${params.protocol}" = "10x5prime" ]
+    then
+        alevin-fry generate-permit-list --input ${runId}_ALEVIN_fry_map -d rc  --output-dir ${runId}_ALEVIN_fry_quant --force-cells 50000 --min-reads 10
     else
-        alevin-fry generate-permit-list --input ${runId}_ALEVIN_fry_map -d fw --output-dir ${runId}_ALEVIN_fry_quant  --force-cells 50000
+        alevin-fry generate-permit-list --input ${runId}_ALEVIN_fry_map -d fw --output-dir ${runId}_ALEVIN_fry_quant  --force-cells 50000 --min-reads 10
     fi
 
     alevin-fry collate -i ${runId}_ALEVIN_fry_quant -r ${runId}_ALEVIN_fry_map -t 16
