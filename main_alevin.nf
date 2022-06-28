@@ -294,6 +294,7 @@ process alevin_config {
     output:
         set val(runId), file("${runId}"),  file("${runId}/alevin/raw_cb_frequency.txt") into ALEVIN_RESULTS
         set val(runId), env(ALEVIN_MAPPING) into ALEVIN_MAPPING
+        set val(runId), path(".command.log")  into MEM_ALEVIN
 
     """
     salmon alevin ${barcodeConfig} -1 \$(ls barcodes*.fastq.gz | tr '\\n' ' ') -2 \$(ls cdna*.fastq.gz | tr '\\n' ' ') \
@@ -628,3 +629,45 @@ process cell_metadata {
     """ 
   
 }
+
+
+
+
+process parse_command_log {
+
+    input: 
+    set val(runId), path(".command.log") from MEM_ALEVIN
+    output:
+    set val(runId), env(AVG_MEM) into AVG_MEMORIES
+    set val(runId), env(RUN_TIME) into RUN_TIMES
+    
+    """
+
+    AVG_MEM=\$(grep "Average Memory : " .command.log | awk '{split(\$0, array, ":"); print array[2]}' | sed 's/^ *//g' |sed 's/ MB//g' )
+    RUN_TIME=\$(grep "Run time : " .command.log | awk '{split(\$0, array, ":"); print array[2]}' | sed 's/^ *//g' |sed 's/ sec.//g' )
+
+    """
+
+}
+
+
+process write_table_benchmark {
+    publishDir "$resultsRoot/memory_time", mode: 'copy', overwrite: true
+   
+    input:
+    set val(runId), avg_mem from AVG_MEMORIES
+    set val(runId), run_time from RUN_TIMES
+    
+    
+    output:
+    file("*_memory.txt") into RESULTS_MEMORY
+    file("*_time.txt") into RESULTS_TIME
+ 
+ 
+    """
+    echo "${avg_mem}" > ${params.name}_${runId}_memory.txt    
+    echo "${run_time}" > ${params.name}_${runId}_time.txt    
+   
+    """
+}
+

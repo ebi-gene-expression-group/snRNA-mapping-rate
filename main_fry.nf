@@ -266,6 +266,7 @@ process alevin_config {
     output:
         set val(runId), path("${runId}_ALEVIN_fry_quant"), path("${runId}_ALEVIN_fry_quant/featureDump.txt") into ALEVIN_FRY_RESULTS_SPLICI
         set val(runId), env(FRY_MAPPING) into ALEVIN_FRY_MAPPING
+        set val(runId), path(".command.log")  into MEM_ALEVIN_FRY
       
 
     """
@@ -639,4 +640,43 @@ process cell_metadata {
     make_cell_metadata.py ${params.name}_counts_mtx_nonempty/barcodes.tsv $sdrfMeta $cellsFile ${params.name}.cell_metadata_nonempty.tsv
     """ 
   
+}
+
+
+process parse_command_log {
+
+    input: 
+    set val(runId), path(".command.log") from MEM_ALEVIN_FRY
+    output:
+    set val(runId), env(AVG_MEM) into AVG_MEMORIES
+    set val(runId), env(RUN_TIME) into RUN_TIMES
+    
+    """
+
+    AVG_MEM=\$(grep "Average Memory : " .command.log | awk '{split(\$0, array, ":"); print array[2]}' | sed 's/^ *//g' |sed 's/ MB//g' )
+    RUN_TIME=\$(grep "Run time : " .command.log | awk '{split(\$0, array, ":"); print array[2]}' | sed 's/^ *//g' |sed 's/ sec.//g' )
+
+    """
+
+}
+
+
+process write_table_benchmark {
+    publishDir "$resultsRoot/memory_time", mode: 'copy', overwrite: true
+   
+    input:
+    set val(runId), avg_mem from AVG_MEMORIES
+    set val(runId), run_time from RUN_TIMES
+    
+    
+    output:
+    file("*_memory.txt") into RESULTS_MEMORY
+    file("*_time.txt") into RESULTS_TIME
+ 
+ 
+    """
+    echo "${avg_mem}" > ${params.name}_${runId}_memory.txt    
+    echo "${run_time}" > ${params.name}_${runId}_time.txt    
+   
+    """
 }
