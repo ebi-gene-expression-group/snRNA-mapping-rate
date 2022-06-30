@@ -635,6 +635,8 @@ process cell_metadata {
 
 process parse_command_log {
 
+    errorStrategy { task.exitStatus == 130 || task.exitStatus == 137 ? 'retry' : 'finish' }
+
     input: 
     set val(runId), path(".command.log") from MEM_ALEVIN
     output:
@@ -652,6 +654,7 @@ process parse_command_log {
 
 
 process write_table_benchmark {
+    errorStrategy { task.exitStatus == 130 || task.exitStatus == 137 ? 'retry' : 'finish' }
     publishDir "$resultsRoot/memory_time", mode: 'copy', overwrite: true
    
     input:
