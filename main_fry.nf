@@ -254,7 +254,7 @@ process alevin_config {
     
     cache 'lenient'
     cpus 12
-    memory { 20.GB * task.attempt }
+    memory { 5.GB * task.attempt }
     errorStrategy { task.exitStatus !=2 && (task.exitStatus == 130 || task.exitStatus == 137 || task.attempt < 3)  ? 'retry' : 'ignore' }
     maxRetries 10
     conda "${baseDir}/envs/alevin-fry_2.yml"
