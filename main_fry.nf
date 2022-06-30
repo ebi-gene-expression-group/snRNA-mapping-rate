@@ -347,7 +347,7 @@ process velocity {
     publishDir "${resultsRoot}/velocity/", mode: 'copy', overwrite: true
     
 
-    conda "${baseDir}/envs/parse_alevin_fry.yml"
+    conda "${baseDir}/envs/scVelo.yml"
 
     memory { 10.GB * task.attempt }
    
