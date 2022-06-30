@@ -317,6 +317,7 @@ ALEVIN_FRY_RESULTS_SPLICI
         ALEVIN_RESULTS_FOR_QC
         ALEVIN_RESULTS_FOR_PROCESSING
         ALEVIN_RESULTS_FOR_OUTPUT
+         ALEVIN_RESULTS_FOR_VELOCITY
     }
 
 process mtx_alevin_fry_to_mtx {
@@ -339,6 +340,29 @@ process mtx_alevin_fry_to_mtx {
 
     """
     alevinFryMtxTo10x.py --cell_prefix ${runId}- ${runId}_ALEVIN_fry_quant counts_mtx_${runId} ${params.mode}
+    """      
+}
+
+process velocity {
+    publishDir "${resultsRoot}/velocity/", mode: 'copy', overwrite: true
+    
+
+    conda "${baseDir}/envs/parse_alevin_fry.yml"
+
+    memory { 10.GB * task.attempt }
+   
+
+    input:
+    set val(runId), path("${runId}_ALEVIN_fry_quant"), file(rawBarcodeFreq) from ALEVIN_RESULTS_FOR_VELOCITY
+
+    output:
+
+    set val(runId), path("${params.name}_${runId}_veloity.png") into ALEVIN_VELO
+    // file("counts_mtx_${protocol}") into PROTOCOL_COUNT_MATRICES
+
+
+    """
+    scVelo.py ${runId}_ALEVIN_fry_quant ${params.name}_${runId}_veloity.png
     """      
 }
 
