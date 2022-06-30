@@ -29,8 +29,7 @@ if not os.path.isdir(alevin_out):
 # Read mtx from alevin_fry_quant 
 
 adata = load_fry(alevin_out, output_format = "velocity")
-e2n = dict([ l.rstrip().split() for l in open(e2n_path).readlines()])
-adata.var_names = [e2n[e] for e in adata.var_names]
+
 
 
 #basic filtering
