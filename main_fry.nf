@@ -357,7 +357,7 @@ process velocity {
 
     output:
 
-    set val(runId), path("${params.name}_${runId}_veloity.png") into ALEVIN_VELO
+    file("${params.name}_${runId}_veloity.png") into ALEVIN_VELO
     // file("counts_mtx_${protocol}") into PROTOCOL_COUNT_MATRICES
 
 
