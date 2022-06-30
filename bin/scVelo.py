@@ -14,6 +14,7 @@ import os
 parser = argparse.ArgumentParser(description='Do velocity analysis')
 parser.add_argument('alevin_fry_quant', help = 'Alevin output directory')
 parser.add_argument('out_file', help = 'output file name for plot')
+args = parser.parse_args() 
 
 alevin_out=args.alevin_fry_quant
 out = args.out_file
