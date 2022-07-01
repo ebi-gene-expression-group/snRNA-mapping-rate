@@ -37,4 +37,4 @@ adata = load_fry(alevin_out, output_format = "velocity")
 sc.pp.filter_cells(adata, min_genes=750)
 sc.pp.filter_genes(adata, min_cells=3)
 
-scv.pl.proportions(adata, out)
+scv.pl.proportions(adata, save=out)
