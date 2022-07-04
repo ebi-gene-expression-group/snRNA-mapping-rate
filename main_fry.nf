@@ -357,12 +357,12 @@ process velocity {
 
     output:
 
-    file("/figures/scvelo_proportions_${params.name}_${runId}_veloity.png") into ALEVIN_VELO
+    file("figures/scvelo_proportions_${params.name}_${runId}.png") into ALEVIN_VELO
     // file("counts_mtx_${protocol}") into PROTOCOL_COUNT_MATRICES
 
 
     """
-    scVelo_proportions.py ${runId}_ALEVIN_fry_quant ${params.name}_${runId}_veloity.png
+    scVelo_proportions.py ${runId}_ALEVIN_fry_quant ${params.name}_${runId}.png
     """      
 }
 
