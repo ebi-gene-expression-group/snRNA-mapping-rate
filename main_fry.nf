@@ -667,40 +667,40 @@ process cell_metadata {
 }
 
 
-process parse_command_log {
+// process parse_command_log {
 
-    input: 
-    set val(runId), path(".command.log") from MEM_ALEVIN_FRY
-    output:
-    set val(runId), env(AVG_MEM) into AVG_MEMORIES
-    set val(runId), env(RUN_TIME) into RUN_TIMES
+//     input: 
+//     set val(runId), path(".command.log") from MEM_ALEVIN_FRY
+//     output:
+//     set val(runId), env(AVG_MEM) into AVG_MEMORIES
+//     set val(runId), env(RUN_TIME) into RUN_TIMES
     
-    """
+//     """
 
-    AVG_MEM=\$(grep "Average Memory : " .command.log | awk '{split(\$0, array, ":"); print array[2]}' | sed 's/^ *//g' |sed 's/ MB//g' )
-    RUN_TIME=\$(grep "Run time : " .command.log | awk '{split(\$0, array, ":"); print array[2]}' | sed 's/^ *//g' |sed 's/ sec.//g' )
+//     AVG_MEM=\$(grep "Average Memory : " .command.log | awk '{split(\$0, array, ":"); print array[2]}' | sed 's/^ *//g' |sed 's/ MB//g' )
+//     RUN_TIME=\$(grep "Run time : " .command.log | awk '{split(\$0, array, ":"); print array[2]}' | sed 's/^ *//g' |sed 's/ sec.//g' )
 
-    """
+//     """
 
-}
+// }
 
 
-process write_table_benchmark {
-    publishDir "$resultsRoot/memory_time", mode: 'copy', overwrite: true
+// process write_table_benchmark {
+//     publishDir "$resultsRoot/memory_time", mode: 'copy', overwrite: true
    
-    input:
-    set val(runId), avg_mem from AVG_MEMORIES
-    set val(runId), run_time from RUN_TIMES
+//     input:
+//     set val(runId), avg_mem from AVG_MEMORIES
+//     set val(runId), run_time from RUN_TIMES
     
     
-    output:
-    file("*_memory.txt") into RESULTS_MEMORY
-    file("*_time.txt") into RESULTS_TIME
+//     output:
+//     file("*_memory.txt") into RESULTS_MEMORY
+//     file("*_time.txt") into RESULTS_TIME
  
  
-    """
-    echo "${avg_mem}" > ${params.name}_${runId}_memory.txt    
-    echo "${run_time}" > ${params.name}_${runId}_time.txt    
+//     """
+//     echo "${avg_mem}" > ${params.name}_${runId}_memory.txt    
+//     echo "${run_time}" > ${params.name}_${runId}_time.txt    
    
-    """
-}
+//     """
+// }
