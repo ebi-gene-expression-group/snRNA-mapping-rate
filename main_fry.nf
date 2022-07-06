@@ -343,28 +343,28 @@ process mtx_alevin_fry_to_mtx {
     """      
 }
 
-// process velocity {
-//     publishDir "${resultsRoot}/velocity/", mode: 'copy', overwrite: true
+process velocity {
+    publishDir "${resultsRoot}/velocity/", mode: 'copy', overwrite: true
     
 
-//     conda "${baseDir}/envs/scVelo.yml"
+    conda "${baseDir}/envs/scVelo.yml"
 
-//     memory { 10.GB * task.attempt }
+    memory { 10.GB * task.attempt }
    
 
-//     input:
-//     set val(runId), path("${runId}_ALEVIN_fry_quant"), file(rawBarcodeFreq) from ALEVIN_RESULTS_FOR_VELOCITY
+    input:
+    set val(runId), path("${runId}_ALEVIN_fry_quant"), file(rawBarcodeFreq) from ALEVIN_RESULTS_FOR_VELOCITY
 
-//     output:
+    output:
 
-//     file("figures/scvelo_proportions_${params.name}_${runId}.png") into ALEVIN_VELO
-//     // file("counts_mtx_${protocol}") into PROTOCOL_COUNT_MATRICES
+    file("figures/scvelo_proportions_${params.name}_${runId}.png") into ALEVIN_VELO
+    // file("counts_mtx_${protocol}") into PROTOCOL_COUNT_MATRICES
 
 
-//     """
-//     scVelo_proportions.py ${runId}_ALEVIN_fry_quant ${params.name}_${runId}.png
-//     """      
-// }
+    """
+    scVelo_proportions.py ${runId}_ALEVIN_fry_quant ${params.name}_${runId}.png
+    """      
+}
 
 
 
