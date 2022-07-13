@@ -32,12 +32,37 @@ if not os.path.isdir(alevin_out):
 adata = load_fry(alevin_out, output_format = "velocity")
 
 
-
+scv.pl.proportions(adata, save=out)
 #basic filtering
 
-#sc.pp.filter_cells(adata, min_genes=750)
-#sc.pp.filter_genes(adata, min_cells=3)
+sc.pp.filter_cells(adata, min_genes=750)
+sc.pp.filter_genes(adata, min_cells=3)
 
 
+# make sure gene names are unique
+adata.var_names_make_unique()
 
-scv.pl.proportions(adata, save=out)
+# get embeddings
+sc.tl.pca(adata)
+sc.pp.neighbors(adata)
+sc.tl.tsne(adata)
+sc.tl.umap(adata, n_components = 2)
+
+# housekeeping
+matplotlib.use('AGG')
+scv.settings.set_figure_params('scvelo')
+
+# get the proportion of spliced and unspliced count
+scv.utils.show_proportions(adata)
+
+# filter cells and genes, then normalize expression values
+scv.pp.filter_and_normalize(adata, min_shared_counts=20, n_top_genes=2000,enforce=True)
+
+# scVelo pipeline
+scv.pp.moments(adata, n_pcs=30, n_neighbors=15)
+scv.tl.recover_dynamics(adata, n_jobs = 11)
+scv.tl.velocity(adata, mode = 'dynamical')
+scv.tl.velocity_graph(adata)
+#adata.write('p.h5ad', compression='gzip')
+scv.pl.velocity_embedding_stream(adata, basis='X_umap', save=out)
+
