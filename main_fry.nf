@@ -357,7 +357,7 @@ process velocity {
 
     output:
 
-    set file("figures/scvelo_proportions_${params.name}_${runId}.png"), file ("${params.name}_${runId}.png") into ALEVIN_VELO
+    set file("figures/scvelo_proportions_${params.name}_${runId}.png"), file ("figures/scvelo_${params.name}_${runId}.png") into ALEVIN_VELO
     // file("counts_mtx_${protocol}") into PROTOCOL_COUNT_MATRICES
 
 
