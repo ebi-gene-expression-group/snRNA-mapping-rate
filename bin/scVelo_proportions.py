@@ -15,6 +15,8 @@ import sys
 
 andata_list = sys.argv[1:-1]
 
+print(andata_list)
+
 #parser = argparse.ArgumentParser(description='Do velocity analysis')
 #parser.add_argument('alevin_fry_quant', help = 'Alevin output directory')
 #parser.add_argument('out_file', help = 'output file name for plot')
