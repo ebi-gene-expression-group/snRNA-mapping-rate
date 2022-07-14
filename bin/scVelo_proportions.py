@@ -26,9 +26,9 @@ out = sys.argv[-1]
 
 # Run some checks in the Alevin output
 
-if not os.path.isdir(alevin_out):
-    print("{} is not a directory".format( alevin_out ))
-    sys.exit(1)
+# if not os.path.isdir(alevin_out):
+#     print("{} is not a directory".format( alevin_out ))
+#     sys.exit(1)
 
 # Read mtx from alevin_fry_quant 
 adata_appended = []
