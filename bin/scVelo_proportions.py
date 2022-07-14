@@ -32,11 +32,10 @@ if not os.path.isdir(alevin_out):
 
 # Read mtx from alevin_fry_quant 
 adata_appended = []
-for andata_path in andata_list
+for andata_path in andata_list:
     andata = load_fry(andata_path, output_format = "velocity")
     adata_appended.append(andata)
 adata = ad.concat(adata_appended)
-
 
 scv.pl.proportions(adata, save=out)
 #basic filtering
