@@ -265,7 +265,7 @@ process alevin_config {
        
     output:
         set val(runId), path("${runId}_ALEVIN_fry_quant"), path("${runId}_ALEVIN_fry_quant/featureDump.txt") into ALEVIN_FRY_RESULTS_SPLICI
-        path("${runId}_ALEVIN_fry_quant") into ALEVIN_RESULTS_FOR_VELOCITY
+        file("${runId}_ALEVIN_fry_quant") into ALEVIN_RESULTS_FOR_VELOCITY
         set val(runId), env(FRY_MAPPING) into ALEVIN_FRY_MAPPING
         set val(runId), path(".command.log")  into MEM_ALEVIN_FRY
       
@@ -354,7 +354,7 @@ process velocity {
    
 
     input:
-    path("*_ALEVIN_fry_quant") from ALEVIN_RESULTS_FOR_VELOCITY.collect()
+    file("*_ALEVIN_fry_quant") from ALEVIN_RESULTS_FOR_VELOCITY.collect()
 
     output:
 
