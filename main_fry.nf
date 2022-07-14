@@ -363,7 +363,7 @@ process velocity {
 
 
     """
-    scVelo_proportions.py \$(ls -d *_ALEVIN_fry_quant | tr '\\n' ' ') ${params.name}}.png
+    scVelo_proportions.py \$(ls -d *_ALEVIN_fry_quant | tr '\\n' ' ') ${params.name}.png
     """      
 }
 
