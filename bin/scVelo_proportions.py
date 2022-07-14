@@ -13,7 +13,7 @@ import os
 import sys
 
 
-andata_list = [x for x in values if x in sys.argv[1:-1]]
+andata_list = sys.argv[1:-1]
 
 #parser = argparse.ArgumentParser(description='Do velocity analysis')
 #parser.add_argument('alevin_fry_quant', help = 'Alevin output directory')
