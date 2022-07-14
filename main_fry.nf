@@ -354,7 +354,7 @@ process velocity {
    
 
     input:
-    file("*_ALEVIN_fry_quant") from ALEVIN_RESULTS_FOR_VELOCITY
+    file("*_ALEVIN_fry_quant") from ALEVIN_RESULTS_FOR_VELOCITY.collect
 
     output:
 
@@ -363,7 +363,7 @@ process velocity {
 
 
     """
-    scVelo_proportions.py \$(ls *_ALEVIN_fry_quant | tr '\\n' ' ') ${params.name}}.png
+    scVelo_proportions.py \$(ls -d *_ALEVIN_fry_quant | tr '\\n' ' ') ${params.name}}.png
     """      
 }
 
