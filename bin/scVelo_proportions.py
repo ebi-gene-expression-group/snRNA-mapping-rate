@@ -45,7 +45,7 @@ scv.pl.proportions(adata, save=out)
 sc.pp.filter_cells(adata, min_genes=750)
 sc.pp.filter_genes(adata, min_cells=3)
 
-sc.pp.normalize(adata, target_sum = 1000000)
+sc.pp.normalize_total(adata, target_sum = 1000000)
 sc.pp.log1p(adata)
 sc.pp.highly_variable_genes(adata)
 
