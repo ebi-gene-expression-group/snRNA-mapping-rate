@@ -69,7 +69,7 @@ scv.settings.set_figure_params('scvelo')
 scv.utils.show_proportions(adata)
 
 # filter cells and genes, then normalize expression values
-scv.pp.filter_and_normalize(adata, min_shared_counts=20, n_top_genes=2000,enforce=True)
+#scv.pp.filter_and_normalize(adata, min_shared_counts=20, n_top_genes=2000,enforce=True)
 
 # scVelo pipeline
 scv.pp.moments(adata, n_pcs=30, n_neighbors=15)
