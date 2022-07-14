@@ -354,7 +354,7 @@ process velocity {
    
 
     input:
-    file("*_ALEVIN_fry_quant") from ALEVIN_RESULTS_FOR_VELOCITY.collect
+    file("*_ALEVIN_fry_quant") from ALEVIN_RESULTS_FOR_VELOCITY.collect()
 
     output:
 
