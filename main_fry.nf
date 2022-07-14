@@ -265,6 +265,7 @@ process alevin_config {
        
     output:
         set val(runId), path("${runId}_ALEVIN_fry_quant"), path("${runId}_ALEVIN_fry_quant/featureDump.txt") into ALEVIN_FRY_RESULTS_SPLICI
+        path("${runId}_ALEVIN_fry_quant") into ALEVIN_RESULTS_FOR_VELOCITY
         set val(runId), env(FRY_MAPPING) into ALEVIN_FRY_MAPPING
         set val(runId), path(".command.log")  into MEM_ALEVIN_FRY
       
@@ -317,7 +318,7 @@ ALEVIN_FRY_RESULTS_SPLICI
         ALEVIN_RESULTS_FOR_QC
         ALEVIN_RESULTS_FOR_PROCESSING
         ALEVIN_RESULTS_FOR_OUTPUT
-         ALEVIN_RESULTS_FOR_VELOCITY
+       
     }
 
 process mtx_alevin_fry_to_mtx {
@@ -353,7 +354,7 @@ process velocity {
    
 
     input:
-    set val(runId), path("${runId}_ALEVIN_fry_quant"), file(rawBarcodeFreq) from ALEVIN_RESULTS_FOR_VELOCITY
+    path("*_ALEVIN_fry_quant") from ALEVIN_RESULTS_FOR_VELOCITY.collect()
 
     output:
 
@@ -362,7 +363,7 @@ process velocity {
 
 
     """
-    scVelo_proportions.py ${runId}_ALEVIN_fry_quant ${params.name}_${runId}.png 
+    scVelo_proportions.py \$(ls *_ALEVIN_fry_quant | tr '\\n' ' ') ${params.name}_${runId}.png
     """      
 }
 

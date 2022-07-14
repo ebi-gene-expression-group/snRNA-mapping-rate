@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 import scanpy as sc
-import anndata
+import anndata as ad
 import scvelo as scv
 import matplotlib
 import scipy
@@ -12,13 +12,16 @@ from pyroe import load_fry
 import os
 import sys
 
-parser = argparse.ArgumentParser(description='Do velocity analysis')
-parser.add_argument('alevin_fry_quant', help = 'Alevin output directory')
-parser.add_argument('out_file', help = 'output file name for plot')
-args = parser.parse_args() 
 
-alevin_out=args.alevin_fry_quant
-out = args.out_file
+andata_list = [x for x in values if x in sys.argv[1:-1]]
+
+#parser = argparse.ArgumentParser(description='Do velocity analysis')
+#parser.add_argument('alevin_fry_quant', help = 'Alevin output directory')
+#parser.add_argument('out_file', help = 'output file name for plot')
+#args = parser.parse_args() 
+
+#alevin_out=args.alevin_fry_quant
+out = sys.argv[-1]
 
 
 # Run some checks in the Alevin output
@@ -28,8 +31,11 @@ if not os.path.isdir(alevin_out):
     sys.exit(1)
 
 # Read mtx from alevin_fry_quant 
-
-adata = load_fry(alevin_out, output_format = "velocity")
+adata_appended = []
+for andata_path in andata_list
+    andata = load_fry(andata_path, output_format = "velocity")
+    adata_appended.append(andata)
+adata = ad.concat(adata_appended)
 
 
 scv.pl.proportions(adata, save=out)
@@ -38,9 +44,15 @@ scv.pl.proportions(adata, save=out)
 sc.pp.filter_cells(adata, min_genes=750)
 sc.pp.filter_genes(adata, min_cells=3)
 
+sc.pp.normalize(adata, target_sum = 1000000)
+sc.pp.log1p(adata)
+sc.pp.highly_variable_genes(adata)
+
+sc.pp.scale(adata)
+
 
 # make sure gene names are unique
-adata.var_names_make_unique()
+
 
 # get embeddings
 sc.tl.pca(adata)
