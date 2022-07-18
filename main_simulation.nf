@@ -3,12 +3,12 @@
 sdrfFile = params.sdrf
 resultsRoot = params.resultsRoot
 referenceGenome = params.referenceGenome
-referencecDNA = params.referencecDNA
+// referencecDNA = params.referencecDNA
 referenceGtf = params.referenceGtf
 protocol = params.protocol
 
 
-REFERENCE_CDNA = Channel.fromPath(referencecDNA,checkIfExists: true).first()
+// REFERENCE_CDNA = Channel.fromPath(referencecDNA,checkIfExists: true).first()
 REFERENCE_GTF = Channel.fromPath( referenceGtf,checkIfExists: true ).first()
 REFERENCE_GENOME = Channel.fromPath( referenceGenome,checkIfExists: true ).first()
 
@@ -44,27 +44,9 @@ SDRF_FOR_FASTQS
     }    
     .set { FASTQ_RUNS }
 
-process make_t2g_file {
 
-    input:
-        path reference from REFERENCE_CDNA
-
-    output:
-        path "t2g_cDNA.txt" into T2G_CDNA
-        path "t2g_cDNA.txt" into T2G_FOR_FRY
-
-
-    """
-    zcat ${reference} | awk '{if(\$1~/>/)print \$1"\t"\$4}' \\
-     > t2g_cDNA.txt; sed -i 's/>//g' t2g_cDNA.txt; sed -i 's/gene://g' t2g_cDNA.txt; \\
-     sed -i 's/gene_symbol://g' t2g_cDNA.txt
-    """
-}
  
-T2G_CDNA.into {
-    T2G_CDNA_FOR_ALEVIN
-    T2G_CDNA_FOR_ALEVIN_FRY
-}
+
 
 process download_fastqs {
     
@@ -285,7 +267,7 @@ process run_STARSolo {
     
 
     script:
-    if( barcodeConfig == '10XV3' )
+    if( barcodeConfig == '10xv3' )
         """
         STAR --genomeDir STAR_index --readFilesIn \$(ls cdna*.fastq.gz | tr '\\n' ', '| sed  's/,*\$//g') \$(ls barcodes*.fastq.gz | tr '\\n' ', '| sed  's/,*\$//g') --soloType Droplet --soloCBwhitelist '${baseDir}/whitelist/3M-february-2018.txt.gz' --soloUMIlen ${umiLength} --soloCBlen ${barcodeLength} --soloUMIstart \$(($barcodeLength+1)) --soloCBstart 1 --runThreadN 12 --soloFeatures Gene GeneFull --outFileNamePrefix ${runId}_STAR_tmp --readFilesCommand zcat --soloBarcodeReadLength 0
 
@@ -296,7 +278,7 @@ process run_STARSolo {
         
         
         """
-    else if( barcodeConfig == '10XV2' )
+    else if( barcodeConfig == '10xv2' )
   
         """
         STAR --genomeDir STAR_index --readFilesIn \$(ls cdna*.fastq.gz | tr '\\n' ', '| sed  's/,*\$//g') \$(ls barcodes*.fastq.gz | tr '\\n' ', '| sed  's/,*\$//g') --soloType Droplet --soloCBwhitelist '${baseDir}/whitelist/737K-august-2016.txt' --soloUMIlen ${umiLength} --soloCBlen ${barcodeLength} --soloUMIstart \$(($barcodeLength+1)) --soloCBstart 1 --runThreadN 12 --soloFeatures Gene GeneFull --outFileNamePrefix ${runId}_STAR_tmp --readFilesCommand zcat --soloBarcodeReadLength 0
