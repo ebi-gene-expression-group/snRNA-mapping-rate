@@ -263,7 +263,7 @@ process run_STARSolo {
     output:
     set val(runId), path("${runId}_STAR_tmpSolo.out") into STAR_RESULTS
     set val(runId), path(".command.log")  into  MEM_STAR
-    bam into BAM_FILE
+    // bam into BAM_FILE
     
 
     script:
