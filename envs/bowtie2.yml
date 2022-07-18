@@ -1,0 +1,4 @@
+name: bowtie2
+dependencies:
+  - bioconda::bowtie2
+

@@ -301,10 +301,24 @@ process run_STARSolo {
 
         
         
-        """
+        """ 
 }
 
 // make bowtie index
+process bowtie_index {
 
+     conda "${baseDir}/envs/bowtie2.yml"
+
+
+    input:
+        path(referenceGenome) from REFERENCE_GENOME
+
+    output:
+    into BOWTIE_INDEX
+
+    """
+        bowtie2-build [options]* <reference_in> <bt2_base>
+    """
+}
 
 // 
